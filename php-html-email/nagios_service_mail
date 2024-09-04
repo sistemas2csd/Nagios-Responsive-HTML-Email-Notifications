@@ -72,6 +72,8 @@ $f_smtpdebug = getConfig('mail', 'smtpdebug');
 $f_smtpsecure = getConfig('mail', 'smtpsecure');
 $f_wordwrap = getConfig('mail', 'wordwrap');
 $f_language = getConfig('general', 'language');
+$f_company_email = getConfig('general', 'company_email');
+$f_company_name = getConfig('general', 'company_name');
 
 /* Arguments containing Nagios Alert/Notification Info */
 array_shift($argv);
@@ -560,7 +562,7 @@ $f_HTMLmessage = '
         <tr>
           <td style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; vertical-align:middle; color: #999999; text-align: center; padding: 40px 10px;width: 100%;" class="x-gmail-data-detectors">
             <span style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; color:#999999; text-align:center;">
-              Copyright &#169; 2014-' .$f_date_year. ' &#124; <a href="mailto:sistemas@csd.gob.es?subject=Nagios-HTML-Email-Notifications" style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; text-decoration:underline; color:#000000;">Consejo Superior de Deportes</a>
+              Copyright &#169; 2014-' .$f_date_year. ' &#124; <a href="mailto:' .$f_company_email. '?subject=Nagios-HTML-Email-Notifications" style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; text-decoration:underline; color:#000000;">' .$f_company_name. '</a>
             </span>
             <br>
             <span style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; color:#999999; text-align:center;">
