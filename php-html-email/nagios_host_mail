@@ -50,31 +50,7 @@ Requirements:
 
 require_once dirname(__FILE__) . '/PHPMailer/PHPMailerAutoload.php';
 
-function getConfig($section, $property) {
-         $config_file = 'config.cfg';
-         if (!$settings = parse_ini_file($config_file, TRUE)) {
-             echo "Error, no se puede abrir el fichero de configuracion.<br>";
-             die();
-         } else {
-             $config = $settings[$section][$property];
-         }
-         return $config;
-}
-
-/* Arguments from Config File config.cfg */
-$f_smtpauth = getConfig('mail', 'smtpauth');
-$f_username = getConfig('mail', 'username');
-$f_passwd = getConfig('mail', 'password');
-$f_host = getConfig('mail', 'host');
-$f_port = getConfig('mail', 'port');
-$f_from = getConfig('mail', 'from');
-$f_fromname = getConfig('mail', 'fromname');
-$f_smtpdebug = getConfig('mail', 'smtpdebug');
-$f_smtpsecure = getConfig('mail', 'smtpsecure');
-$f_wordwrap = getConfig('mail', 'wordwrap');
-$f_language = getConfig('general', 'language');
-$f_company_email = getConfig('general', 'company_email');
-$f_company_name = getConfig('general', 'company_name');
+require __DIR__ . '/includes/base.php';
 
 /* Arguments containing Nagios Alert/Notification Info */
 array_shift($argv);
@@ -116,64 +92,64 @@ $f_resolv_alert_status = '';
 
 /* Defaults */
 $f_color="#5D6D7E";
-$f_ackauthor_desc="Autor de Resolucion:";
-$f_ackcomment_desc="Comentario sobre Resolucion:";
+$f_ackauthor_desc = $translations['ackauthor'];
+$f_ackcomment_desc = $translations['ackcomment'];
 
 /* Build type of alert */
 if($f_notify_type=="PROBLEM") {
   $f_color="#B91C1C";
-  $f_ackauthor_desc="Autor de Resolucion:";
-  $f_ackcomment_desc="Comentario sobre Resolucion:";
-}  
+  $f_ackauthor_desc = $translations['ackauthor'];
+  $f_ackcomment_desc = $translations['ackcomment'];
+}
 if($f_notify_type=="RECOVERY") {
   $f_color="#16A34A";
-  $f_ackauthor_desc="Autor de Resolucion:";
-  $f_ackcomment_desc="Comentario sobre Resolucion:";
+  $f_ackauthor_desc = $translations['ackauthor'];
+  $f_ackcomment_desc = $translations['ackcomment'];
 }
 if($f_notify_type=="UNREACHABLE") {
   $f_color="#AEB6BF";
-  $f_ackauthor_desc="Autor de Resolucion:";
-  $f_ackcomment_desc="Comentario sobre Resolucion:";
+  $f_ackauthor_desc = $translations['ackauthor'];
+  $f_ackcomment_desc = $translations['ackcomment'];
 }
 if($f_notify_type=="ACKNOWLEDGEMENT") {
   $f_color="#AEB6BF";
-  $f_ackauthor_desc="Autor de Resolucion:";
-  $f_ackcomment_desc="Comentario sobre Resolucion:";
+  $f_ackauthor_desc = $translations['ackauthor'];
+  $f_ackcomment_desc = $translations['ackcomment'];
 }
 if($f_notify_type=="FLAPPINGSTART") {
   $f_color="#800000";
-  $f_ackauthor_desc="Autor sobre Flapping:";
-  $f_ackcomment_desc="Comentario sobre Flapping:";
+  $f_ackauthor_desc = $translations['flappingauthor'];
+  $f_ackcomment_desc = $translations['flappingcomment'];
 }
 if($f_notify_type=="FLAPPINGSTOP") {
   $f_color="#16A34A";
-  $f_ackauthor_desc="Autor sobre Flapping:";
-  $f_ackcomment_desc="Comentario sobre Flapping:";
+  $f_ackauthor_desc = $translations['flappingauthor'];
+  $f_ackcomment_desc = $translations['flappingcomment'];
 }
 if($f_notify_type=="FLAPPINGDISABLED") {
   $f_color="#F97316";
-  $f_ackauthor_desc="Autor sobre Flapping:";
-  $f_ackcomment_desc="Comentario sobre Flapping:";
+  $f_ackauthor_desc = $translations['flappingauthor'];
+  $f_ackcomment_desc = $translations['flappingcomment'];
 }
 if($f_notify_type=="DOWNTIMESTART") {
   $f_color="#5DADE2";
-  $f_ackauthor_desc="Tiempo de Inactividad Programado por:";
-  $f_ackcomment_desc="Comentario sobre el Tiempo de Inactividad Programado:";
+  $f_ackauthor_desc = $translations['scheduleddowntimeauthor'];
+  $f_ackcomment_desc = $translations['scheduleddowntimecomment'];
 }
 if($f_notify_type=="DOWNTIMEEND") {
   $f_color="#48C9B0";
-  $f_ackauthor_desc="Tiempo de Inactividad Programado por:";
-  $f_ackcomment_desc="Comentario sobre el Tiempo de Inactividad Programado:";
+  $f_ackauthor_desc = $translations['scheduleddowntimeauthor'];
+  $f_ackcomment_desc = $translations['scheduleddowntimecomment'];
 }
 if($f_notify_type=="DOWNTIMECANCELLED") {
   $f_color="#AF7AC5";
-  $f_ackauthor_desc="Tiempo de Inactividad Programado por:";
-  $f_ackcomment_desc="Comentario sobre el Tiempo de Inactividad Programado:";
+  $f_ackauthor_desc = $translations['scheduleddowntimeauthor'];
+  $f_ackcomment_desc = $translations['scheduleddowntimecomment'];
 }
 if($f_notify_type=="CUSTOM") {
   $f_color="#5D6D7E";
-  $f_ackauthor_desc="Autor Personalizado:";
-  $f_ackcomment_desc="Comentario Personalizado:";
+  $f_ackauthor_desc = $translations['customauthor'];
+  $f_ackcomment_desc = $translations['customcomment'];
 }
 
 /* Check if acknowledgement is present and if so, then add HTML code */
@@ -199,31 +175,30 @@ if($f_ackauthor!="" && $f_ackcomment!=""){
 
 if($f_host_state!="UP"){
   $f_resolv_alert_status = '
-    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Resolver Alerta:</h4>
+    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['resolvealert'] . '</h4>
     <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_resolv_alert . '</h2>
   '; 
   
-  $f_resolv_alert_status_none_html =  'Resolver Alerta: ';
-  $f_resolv_alert_status_none_html .=  $f_resolv_alert;  
+  $f_resolv_alert_status_none_html =  $translations['resolvealert'] . ' ' . $f_resolv_alert;
 }
 
 /* Check if acknowledgement is present and if so, then add HTML code */
 if($f_notification_escalation_state==0){
   $f_notification_escalation_state_status = '
-    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Incidente Escalado:</h4>
-    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">No</h2>
+    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' . $translations['incidentescalated'] . '</h4>
+    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $translations['no'] . '</h2>
   ';
 
-  $f_notification_escalation_state_status_none_html = 'Incidente Escalado: No';
+  $f_notification_escalation_state_status_none_html = $translations['incidentescalated'] . ' ' . $translations['no'] . '';
 }
 
 if($f_notification_escalation_state==1){
   $f_notification_escalation_state_status = '
-    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Incidente Escalado:</h4>
-    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">Yes</h2>
+    <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' . $translations['incidentescalated'] . '</h4>
+    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $translations['yes'] . '</h2>
   ';
 
-  $f_notification_escalation_state_status_none_html = 'Incidente Escalado: Si';
+  $f_notification_escalation_state_status_none_html = $translations['incidentescalated'] . ' ' . $translations['yes'] . '';
 }
 
 /* Build the Nagios alert/notification, email body/content */
@@ -231,31 +206,31 @@ if($f_notification_escalation_state==1){
 $f_message = '
 ***** Nagios *****
 
-Tipo Notificacion: ' .$f_notify_type. '
-Nombre Servidor: ' .$f_host_name. '
-Alias Servidor: ' .$f_host_alias. '
-Estado: ' .$f_host_state. '
-Dreccion IP: ' .$f_host_address. '
-Fecha/Hora: ' .$f_long_datetime. '
+' .$translations['notificationtype']. ' ' .$f_notify_type. '
+' .$translations['hostname']. ' ' .$f_host_name. '
+' .$translations['hostalias']. ' ' .$f_host_alias. '
+' .$translations['state']. ' ' .$f_host_state. '
+' .$translations['address']. ' ' .$f_host_address. '
+' .$translations['datetime']. ' ' .$f_long_datetime. '
 ' .$f_notification_escalation_state_status_none_html. '
 ' .$f_ackauthor_status_none_html. '
 ' .$f_ackcomment_status_none_html. '
 
-Info:
+' .$translations['info']. '
 ' .$f_host_output. '
 
 ' .$f_resolv_alert_status_none_html. '
-Consultar Alerta: ' .$f_consult_alert. '
+' .$translations['checkalert']. ' ' .$f_check_alert. '
 ';
 
 /* HTML EMAIL CONTENT */
 $f_HTMLmessage = '
 
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="' .$lang. '" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="utf-8">
-    <meta name="description" content="Alerta de notificacion de Nagios por Correo Electronico">
+    <meta name="description" content="' .$translations['metadescription']. '">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
@@ -384,7 +359,7 @@ $f_HTMLmessage = '
 	<center style="width: 100%; background: #f6f6f6; text-align: left;">
 
 		<div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: sans-serif;">
-			[' .$f_notify_type. '] Servidor: ' .$f_host_alias. ' (' .$f_host_name. ') esta: ' .$f_host_state. '. ***************************************************************************************************************************************
+			[' .$f_notify_type. '] ' .$translations['host']. ' ' .$f_host_alias. ' (' .$f_host_name. ') ' .$translations['is']. ': ' .$f_host_state. '. ***************************************************************************************************************************************
 		</div>
 
 		<div style="max-width: 600px; padding: 10px 0; margin: auto;" class="email-container">
@@ -401,7 +376,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td style="background-color:#424242;-webkit-border-top-right-radius: 25px;-webkit-border-top-left-radius: 25px;-moz-border-top-right-radius: 25px;-moz-border-top-left-radius: 25px;border-top-right-radius: 25px;border-top-left-radius: 25px;">
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">Notificacion de Alerta</h2>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">' .$translations['alertnotification']. '</h2>
                     </td>
                   </tr>
                   <tr>
@@ -417,13 +392,12 @@ $f_HTMLmessage = '
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
                       <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:right; padding-right:5%;">' . $f_host_attempt_state . '/' . $f_max_host_attempt_state . '</h5>
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; text-align:center; text-decoration:underline;">Servidor:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; text-align:center; text-decoration:underline;">' .$translations['host']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:26px; text-align:center;">' . $f_host_name . '</h2>
-                      <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">Estado: </h5>
+                      <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">' .$translations['state']. '</h5>
                       <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:30px; color:' .$f_color. ';text-align:center;">' . $f_host_state . '</h1>
-                      <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">Desde:</h5>
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:26px;
-                      text-align:center;">' . $f_host_duration . '</h2>
+                      <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">' .$translations['for']. '</h5>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:26px; text-align:center;">' . $f_host_duration . '</h2>
                     </td>
                   </tr>
                 </tbody>
@@ -431,7 +405,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Alias del Servidor:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">' .$translations['hostalias']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_alias . '</h2>
                     </td>
                   </tr>
@@ -440,7 +414,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Direccion del Servidor:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['hostaddress']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_address . '</h2>
                     </td>
                   </tr>
@@ -449,7 +423,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Ultimo Chequeo:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['lastcheck']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_long_date . '</h2>
                     </td>
                   </tr>
@@ -458,7 +432,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Informacion del Estado:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['statusinfo']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_output . '</h2>
                     </td>
                   </tr>
@@ -467,7 +441,7 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Destinatarios Notificados:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['notifiedrecipients']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_all_recipients . '</h2>
                     </td>
                   </tr>
@@ -508,12 +482,12 @@ $f_HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Consultar Alerta:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">' .$translations['checkalert']. '</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_check_alert . '</h2>
                     </td>
                   </tr>
                 </tbody>
-                <td style="font-size:9px;vertical-align:top;">&nbsp;</td>              
+                <td style="font-size:9px;vertical-align:top;">&nbsp;</td>
             </table>
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;-webkit-border-bottom-right-radius: 25px;-webkit-border-bottom-left-radius: 25px;-moz-border-bottom-right-radius: 25px;-moz-border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;">
               <tbody>
@@ -524,7 +498,7 @@ $f_HTMLmessage = '
                 </tr>
                 <tr>
                   <td style="background-color:#424242;-webkit-border-bottom-right-radius: 25px;-webkit-border-bottom-left-radius: 25px;-moz-border-bottom-right-radius: 25px;-moz-border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;">
-                    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">Notificacion de Alerta</h2>
+                    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">' .$translations['alertnotification']. '</h2>
                   </td>
                 </tr>
               </tbody>
@@ -540,7 +514,7 @@ $f_HTMLmessage = '
             </span>
             <br>
             <span style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; color:#999999; text-align:center;">
-              All Rights Reserved.
+              ' .$translations['allrightreserved']. '
             </span>
             <br>
             <br>
