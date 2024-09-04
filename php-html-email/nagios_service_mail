@@ -47,9 +47,8 @@ Requirements:
 
 **********************************************************************************/
 
-require_once dirname(__FILE__) . '/PHPMailer/PHPMailerAutoload.php';
-
 require __DIR__ . '/includes/base.php';
+require __DIR__ . '/includes/MailUtility.php';
 
 /* Arguments containing Nagios Alert/Notification Info */
 array_shift($argv);
@@ -559,30 +558,21 @@ $f_HTMLmessage = '
 </html>
 ';
 
-$mail = new PHPMailer;
-$mail->isSMTP();
-$mail->isHTML(true);
-$mail->SMTPDebug = $f_smtpdebug;
-$mail->SMTPAuth = $f_smtpauth;
-$mail->SMTPSecure = $f_smtpsecure;
-$mail->Host = $f_host;
-$mail->Port = $f_port;
-$mail->Username = $f_username;
-$mail->Password = $f_passwd;
-$mail->From = $f_from;
-$mail->FromName = $f_fromname;
-$mail->WordWrap = $f_wordwrap;
-$mail->addAddress($f_to); 
+/* Send the email alert/notification */
+$mailutility = new MailUtility();
+$mailutility->sendMail(
+  $f_to,
+  '** '.$f_notify_type.' ' .$translations['hostalert']. ' '.$f_serv_desc.' ' .$translations['on']. ' '.$f_host_name.' ' .$translations['is']. ' '.$f_serv_state.' **',
+  $f_HTMLmessage,
+  $f_message,
+  $f_wordwrap
+);
 
-$mail->Subject = '** '.$f_notify_type.' Alerta Servicio: '.$f_serv_desc.' en '.$f_host_name.' es '.$f_serv_state.' **';
-$mail->AltBody = $f_message;
-$mail->Body = $f_HTMLmessage;
-
-if(!$mail->send()) {
-	echo 'El Mensaje no se ha podido enviar.<br>';
-	echo 'Error de Envio: ' . $mail->ErrorInfo . '<br>';
+if($mailutility->mail->isError()) {
+	echo $translations['error.sendmessage'] . '<br>';
+	echo $translations['error.mailer'] . ' ' . $mail->ErrorInfo . '<br>';
 } else {
-	echo 'El Mensaje ha sido enviado.<br>';
+	echo $translations['ok.sendmessage'] . '<br>';
 }
 
 ?>
