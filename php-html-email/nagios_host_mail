@@ -48,8 +48,8 @@ Requirements:
 
 ***********************************************************************************/
 
-require __DIR__ . '/includes/base.php';
-require __DIR__ . '/includes/MailUtility.php';
+require_once __DIR__ . '/includes/base.php';
+require_once __DIR__ . '/includes/MailUtility.php';
 
 /* Arguments containing Nagios Alert/Notification Info */
 array_shift($argv);
