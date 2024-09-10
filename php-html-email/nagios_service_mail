@@ -80,10 +80,8 @@ $f_max_service_attempt_state= array_shift($argv);     /*25*/
 $f_all_recipients= array_shift($argv);  /*26*/
 $f_servicenagios_url= array_shift($argv);  /*27*/
 
-$f_host_name_url = str_replace(' ', '+', $f_host_name);
-$f_serv_desc_url = str_replace(' ', '+', $f_serv_desc);
-$f_resolv_alert = $f_servicenagios_url."/cgi-bin/cmd.cgi?cmd_typ=34&host=".$f_host_name_url."&service=".$f_serv_desc_url;
-$f_check_alert = $f_servicenagios_url."/cgi-bin/extinfo.cgi?type=2&host=".$f_host_name_url."&service=".$f_serv_desc_url;
+$f_resolv_alert = getCommandUrl($f_servicenagios_url, 34, $f_host_name, $f_serv_desc);
+$f_check_alert = getExtendedInfoUrl($f_servicenagios_url, 2, $f_host_name, $f_serv_desc); 
 
 $f_downwarn = $f_duration;
 $f_date_year = date("Y");

@@ -77,9 +77,8 @@ $f_max_host_attempt_state= array_shift($argv);  /*21*/
 $f_all_recipients= array_shift($argv);  /*22*/
 $f_hostnagios_url= array_shift($argv);  /*23*/
 
-$f_host_name_url = str_replace(' ', '+', $f_host_name);
-$f_resolv_alert = $f_hostnagios_url."/cgi-bin/cmd.cgi?cmd_typ=33&host=".$f_host_name_url;
-$f_check_alert = $f_hostnagios_url."/cgi-bin/extinfo.cgi?type=1&host=".$f_host_name_url;
+$f_resolv_alert = getCommandUrl($f_hostnagios_url, 33, $f_host_name);
+$f_check_alert = getExtendedInfoUrl($f_hostnagios_url, 1, $f_host_name); 
 
 $f_date_year = date("Y");
 $f_ackauthor_status_none_html = '';

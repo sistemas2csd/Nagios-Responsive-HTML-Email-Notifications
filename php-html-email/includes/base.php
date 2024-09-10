@@ -4,6 +4,8 @@
  * Get configuration from config file.
  *
  * @param String $section The section name to recover configuration property.
+ * @param String $property The property name to recover configuration value.
+ * 
  * @return type The configuration property value.
  **/
 function getConfig($section, $property) {
@@ -15,6 +17,52 @@ function getConfig($section, $property) {
         $config = $settings[$section][$property];
     }
     return $config;
+}
+
+/**
+ * Get the Nagios Command URL.
+ *
+ * @param String $nagiosUrl The Nagios server URL.
+ * @param String $cmd_typ The Nagios Command Type.
+ * @param String $host The monitored Host name.
+ * @param String $service The monitored Service name.
+ * 
+ * @return String The Nagios Command URL.
+ **/
+function getCommandUrl($nagiosUrl, $cmdType, $host, $service = null) {
+    $queryString = [
+        'cmd_typ' => $cmdType,
+        'host' => $host
+    ];
+    if ($service) {
+        $queryString['service'] = $service;
+    }
+
+    $url = $nagiosUrl. '/cgi-bin/cmd.cgi?' . http_build_query($queryString);
+    return $url;
+}
+
+/**
+ * Get the Nagios Extended Info URL.
+ *
+ * @param String $nagiosUrl The Nagios server URL.
+ * @param String $type The Nagios Extended Info Type.
+ * @param String $host The monitored Host name.
+ * @param String $service The monitored Service name.
+ * 
+ * @return String The Nagios Extended Info URL.
+ **/
+function getExtendedInfoUrl($nagiosUrl, $type, $host, $service = null) {
+    $queryString = [
+        'type' => $type,
+        'host' => $host
+    ];
+    if ($service) {
+        $queryString['service'] = $service;
+    }
+
+    $url = $nagiosUrl . '/cgi-bin/extinfo.cgi?' . http_build_query($queryString);
+    return $url;
 }
 
 /* Arguments from Config File config.cfg */
